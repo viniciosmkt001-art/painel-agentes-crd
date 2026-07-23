@@ -1,0 +1,30 @@
+# Painel de Agentes de IA — produção (VPS 31.97.85.196, ao lado do n8n/Chatwoot)
+# Não tem banco próprio: usa o Supabase compartilhado do IPAM/AMAGIS/ASMEGO.
+# Uso:
+#   cp .env.example .env   (preencha os valores)
+#   docker compose up -d --build
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      APP_URL: ${APP_URL}
+      N8N_PROCESSADOR_WEBHOOK_URL: ${N8N_PROCESSADOR_WEBHOOK_URL}
+      N8N_API_URL: ${N8N_API_URL}
+      N8N_API_KEY: ${N8N_API_KEY}
+      N8N_IPAM_TEMPLATE_WORKFLOW_ID: ${N8N_IPAM_TEMPLATE_WORKFLOW_ID}
+      N8N_GATILHO_WORKFLOW_ID: ${N8N_GATILHO_WORKFLOW_ID}
+      UPLOAD_DIR: public/uploads
+    volumes:
+      - painel_uploads:/app/public/uploads
+
+volumes:
+  painel_uploads:

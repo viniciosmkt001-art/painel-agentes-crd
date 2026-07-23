@@ -28,6 +28,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# uploads de usuário (persistem via volume no deploy, não versionar)
+/public/uploads
+
 # vercel
 .vercel
 
