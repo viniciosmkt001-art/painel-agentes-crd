@@ -1,7 +1,7 @@
 # Painel de Agentes de IA — imagem de produção
 # Build multi-stage: deps -> build -> runner (standalone)
 
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -15,6 +15,11 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# valores falsos só para o Next conseguir coletar as rotas de API durante o build;
+# em runtime o EasyPanel injeta os valores reais, que sobrescrevem estes.
+ENV SUPABASE_URL="https://build-placeholder.supabase.co"
+ENV SUPABASE_SERVICE_ROLE_KEY="build-placeholder"
+ENV AUTH_JWT_SECRET="build-placeholder"
 RUN npm run build
 
 # ── runner ───────────────────────────────────────────────────────
